@@ -10,8 +10,9 @@ public class Player : MonoBehaviour
     public float turnSpeed = 90f;
     public float expPoints = 30.0f;
     public float hp = 100.0f;
+    public float sp = 100.0f;
     public Rigidbody2D rb;
-    public Image expBar;
+    public Image spBar;
     public Image hpBar;
 
     //public List<GameObject>
@@ -50,14 +51,16 @@ public class Player : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         direction = Vector2.zero;
-        //expBar = GameObject.Find("ExpBar");
         //Console.Write("update");
     }
     void FixedUpdate()
     {
-
+        /* Start bars at 100% */
         hpBar.fillAmount = hp / 100.0f;
+        spBar.fillAmount = sp / 100.0f;
+
         transform.Translate(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0);
+
         //if (Input.GetKey("x"))
         //{
 

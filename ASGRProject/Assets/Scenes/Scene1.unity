@@ -79597,7 +79597,7 @@ GameObject:
   - component: {fileID: 1715668758}
   - component: {fileID: 1715668757}
   m_Layer: 5
-  m_Name: ExpBar
+  m_Name: spBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -79758,8 +79758,9 @@ MonoBehaviour:
   turnSpeed: 90
   expPoints: 0
   hp: 100
+  sp: 100
   rb: {fileID: 1739143975}
-  expBar: {fileID: 1715668757}
+  spBar: {fileID: 1715668757}
   hpBar: {fileID: 839707848}
 --- !u!50 &1739143975
 Rigidbody2D:
