@@ -71,8 +71,9 @@ public class Player : MonoBehaviour
 
 
     }
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
+        hp -= 1;
         print("Colliding");
     }
     // Update is called once per frame
