@@ -9,8 +9,12 @@ public class Player : MonoBehaviour
     public float moveSpeed = 5f;
     public float turnSpeed = 90f;
     public float expPoints = 30.0f;
+    public float hp = 100.0f;
     public Rigidbody2D rb;
     public Image expBar;
+    public Image hpBar;
+
+    //public List<GameObject>
 
     //public GameObject player;
 
@@ -51,16 +55,25 @@ public class Player : MonoBehaviour
     }
     void FixedUpdate()
     {
-        
+
+        hpBar.fillAmount = hp / 100.0f;
+        transform.Translate(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0);
+        //if (Input.GetKey("x"))
+        //{
+
+        //    hp -= 10.0f;
+        //}
 
 
+
+    }
+    private void OnCollisionEnter(Collision collision)
+    {
+        print("Colliding");
     }
     // Update is called once per frame
     void Update()
     {
-        expBar.fillAmount = expPoints / 100;
-        expPoints += 1;
-        transform.Translate(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0);
+
     }
 }
-;
