@@ -14,6 +14,7 @@ public class Player : MonoBehaviour
     public Rigidbody2D rb;
     public Image spBar;
     public Image hpBar;
+    
 
     //public List<GameObject>
 
