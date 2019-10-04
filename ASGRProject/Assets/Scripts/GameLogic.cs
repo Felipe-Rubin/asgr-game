@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Tilemaps;
 
 public class GameLogic : MonoBehaviour
 {
@@ -10,16 +11,16 @@ public class GameLogic : MonoBehaviour
     //public Monster mvp;
     public int nmonsters; // How many
     public GameObject mp; // Monster Prefab
-
+    public Tilemap map1;
     // Start is called before the first frame update
-    void Start()
-    {
-    
 
+    void Start()
+    {        
+        float x, y = 0.0f;
         for (int i = 0; i < nmonsters; i++)
         {
-            float x = Random.Range(0.0f, 5.0f);
-            float y = Random.Range(0.0f, 5.0f);
+            x = Random.Range(map1.cellBounds.xMin, map1.cellBounds.xMax);
+            y = Random.Range(map1.cellBounds.yMin, map1.cellBounds.yMax);
             GameObject minion = Instantiate(mp, new Vector3(x, y, 0), Quaternion.identity);
             enemies.Add(minion);
         }

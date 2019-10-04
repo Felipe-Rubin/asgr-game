@@ -2,17 +2,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-public class Monster : MonoBehaviour
+public class Monster : PhysicalObject
 {
     public Sprite healthBar;
-    public float hp = 100.0f;
     private float fullsize;
+    public float dmg = 1.0f;
     // Start is called before the first frame update
     void Start()
     {
+        hp = 100.0f;
         //fullsize = healthBar.texture.set
 
     }
+
 
 
     void FixedUpdate()
@@ -21,8 +23,11 @@ public class Monster : MonoBehaviour
        // healthBar.localScale = new Vector2(100.0f * fullsize / hp, healthBar.localScale.y);
     }
     private void OnTriggerEnter2D(Collider2D collision)
-    { 
-        hp -= 1.0f;
+    {
+        PhysicalObject obj = (PhysicalObject)collision.gameObject;
+        obj.Damage(dmg);
+        obj.SendMessageUpwards("FixedUpdate");
+        //hp -= 1.0f;
     }
 
     //public static explicit operator Monster(GameObject v)

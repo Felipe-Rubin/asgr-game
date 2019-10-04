@@ -1,50 +1,48 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PhysicalObject: MonoBehaviour
+public abstract class PhysicalObject: MonoBehaviour
 {
-    public PhysicalObject(float hp)
-    {
-        this.hp = hp;
-        this.destructible = true;
-    }
-
+    public float maxHP = 100.0f;
     public float hp;/* Health Points */
-
+    
     private bool destructible; /* is destructible or not */
 
     /*Enable or disable invincible */
-    public void setDestructible(bool destructible) {
+    public virtual void setDestructible(bool destructible) {
            this.destructible = destructible;
     }
-    public bool isDestructible() {
+    public virtual bool isDestructible() {
         return this.destructible;
     }
 
     /* Heal this value, return healed health*/
-    public float Heal(float value) {
+    public virtual float Heal(float value) {
         hp += value;
-        return hp;
-    }
-    /* Damage this value, return damaged health*/
-    public float Damage(float value) {
-        hp -= value;
-        return hp;
-    }
-
-    // Start is called before the first frame update
-    //    void Start()
-    //  {
-    //     
-    //}
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (this.hp <= 0.0) {
-            Destroy(gameObject);
+        if (hp > maxHP)
+        {
+            hp = maxHP;
         }
+        return hp;
+    }
+
+    public static explicit operator PhysicalObject(GameObject v)
+    {
+        return v.GetComponent<PhysicalObject>();
+
+        //return physicalObject;
+        //throw new NotImplementedException();
+    }
+
+    /* Damage this value, return damaged health*/
+    public virtual float Damage(float value) {
+        hp -= value;
+        if (hp < 0.0f) {
+            hp = 0.0f;
+        }
+        return hp;
     }
 }
 
