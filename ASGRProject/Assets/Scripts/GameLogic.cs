@@ -6,6 +6,10 @@ using UnityEngine.Tilemaps;
 
 public class GameLogic : MonoBehaviour
 {
+
+    public Image spBar;
+    public Image hpBar;
+
     public Text stageText;
     //public Monster mvp;
     public int nmonsters; // How many
@@ -65,6 +69,9 @@ public class GameLogic : MonoBehaviour
     }
     void FixedUpdate()
     {
+        hpBar.fillAmount = player.hp / player.getMaxHP();
+        spBar.fillAmount = player.sp / player.getMaxSP();
+
         stageText.text = "Remaining Enemies: " + remaining_minions;
     }
 

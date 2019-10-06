@@ -5,7 +5,7 @@ public abstract class PhysicalObject : MonoBehaviour
     public float hp = 100.0f;/* Health Points */
     public float dmg = 1.0f; /* Default Damage */
     public float sp = 100.0f; /* Default Speed */
-    protected float maxHP, maxSP;
+    private float maxHP, maxSP;
     /* Movement Speed */
     protected float moveSpeed = 5f;
     protected float turnSpeed = 90f;
@@ -16,6 +16,15 @@ public abstract class PhysicalObject : MonoBehaviour
         maxHP = hp;
         maxSP = sp;
         destructible = true;
+    }
+
+    public float getMaxHP()
+    {
+        return maxHP;
+    }
+    public float getMaxSP()
+    {
+        return maxSP;
     }
 
     

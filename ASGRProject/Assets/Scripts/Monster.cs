@@ -30,12 +30,10 @@ public class Monster : PhysicalObject
         Vector3 currentHp = healthBar.GetComponent<RectTransform>().localScale;
         currentHp.x =  hp / 400.0f;
         healthBar.GetComponent<RectTransform>().localScale = currentHp;
-
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        
         PhysicalObject obj = (PhysicalObject)collision.gameObject;
         obj.Damage(dmg);
         //healthBar.flipX = true;

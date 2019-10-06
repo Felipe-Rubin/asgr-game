@@ -8,8 +8,6 @@ public class Player : PhysicalObject
     //public float hp = 100.0f;
 
     public Rigidbody2D rb;
-    public Image spBar;
-    public Image hpBar;
 
 
     //public List<GameObject>
@@ -65,8 +63,6 @@ public class Player : PhysicalObject
     void FixedUpdate()
     {
         /* Start bars at 100% */
-        hpBar.fillAmount = hp / maxHP;
-        spBar.fillAmount = sp / 100.0f;
 
         Vector2 movement = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
         rb.position += movement;
