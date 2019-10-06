@@ -7,12 +7,12 @@ using UnityEngine.Tilemaps;
 public class GameLogic : MonoBehaviour
 {
     public Text stageText;
-    public List<GameObject> enemies;
     //public Monster mvp;
     public int nmonsters; // How many
     /* Prefabs */
-    public GameObject mp; // Monster Prefab
-    
+    public GameObject[] minionPrefab; // Monster Prefab
+    public GameObject[] potionPrefab; // Potion Prefab
+    public float dropRate = 0.5f;
 
     /* Tile Maps */
     public Tilemap map1;
@@ -23,22 +23,41 @@ public class GameLogic : MonoBehaviour
 
     /* Player */
     public Player player;
+    private int remaining_minions;
     
     /*Spawn initial monster enemies*/
     private void spawn_monsters()
     {
-        //(Pref)
+        /* Create Minion Monsters */
         float x, y = 0.0f;
         for (int i = 0; i < nmonsters; i++)
         {
-            x = Random.Range(map1.cellBounds.xMin, map1.cellBounds.xMax);
-            y = Random.Range(map1.cellBounds.yMin, map1.cellBounds.yMax);
-            GameObject minion = Instantiate(mp, new Vector3(x, y, 0), Quaternion.identity);
-            enemies.Add(minion);
+            int rng = Random.Range(0, minionPrefab.Length);
+            x = Random.Range(map1.cellBounds.xMin+0.0f, map1.cellBounds.xMax);
+            y = Random.Range(map1.cellBounds.yMin+0.0f, map1.cellBounds.yMax);
+            GameObject minion = Instantiate(minionPrefab[rng], new Vector3(x, y, 0), Quaternion.identity);
+            minion.tag = "minion";
         }
 
+        /*Create Random Items*/
     }
+    // Note: Random.Range returns int if args are int,if args are float
+    // then it returns float.
 
+    public void monster_killed(Monster m)
+    {
+        print("Called");
+        bool rng = Random.Range(0.0f, 1.0f) < dropRate ? true : false;
+        Vector3 pos = m.transform.position;
+        Destroy(m.gameObject, 0);
+        if (rng)
+        {
+            int rng2 = Random.Range(0, potionPrefab.Length);
+
+            Instantiate(potionPrefab[rng2], pos, Quaternion.identity);
+        }
+        
+    }
 
     void Start()
     {
@@ -46,17 +65,14 @@ public class GameLogic : MonoBehaviour
     }
     void FixedUpdate()
     {
-        stageText.text = "Remaining Enemies: "+enemies.Count;
+        stageText.text = "Remaining Enemies: " + remaining_minions;
     }
 
 
     // Update is called once per frame
     void Update()
     {
-        //foreach (GameObject mi in enemies)
-        //    if (((Monster)mi).hp <= 0.0f) {
-        //        Destroy(mi, 0.5f); // delay de 0,5 segundos
-        //    }
+        remaining_minions = GameObject.FindGameObjectsWithTag("minion").Length;
     }
 }
 

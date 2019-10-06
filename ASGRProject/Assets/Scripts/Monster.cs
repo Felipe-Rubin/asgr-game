@@ -2,14 +2,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 public class Monster : PhysicalObject
 {
     public GameObject healthBar;
     private float fullsize;
-   
+
     // Start is called before the first frame update
-    void Start()
+    public override void Start()
     {
+        base.Start();
         healthBar = GetComponent<Monster>().healthBar;
         //hpSprite = healthBar.GetComponent<SpriteRenderer>();
         hp = 100.0f;
@@ -17,29 +19,34 @@ public class Monster : PhysicalObject
         //healthBar.GetComponent<RectTransform>().localScale;
 
     }
-
-    
-
     void FixedUpdate()
     {
-       // print("Fixed Update");
-       // healthBar.localScale = new Vector2(100.0f * fullsize / hp, healthBar.localScale.y);
-    }
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
+
+        if (Math.Abs(hp) <= 0.0f)
+        {
+            FindObjectOfType<GameLogic>().monster_killed(this);
+        }
+
         Vector3 currentHp = healthBar.GetComponent<RectTransform>().localScale;
-        PhysicalObject obj = (PhysicalObject)collision.gameObject;
-        currentHp.x = obj.Damage(dmg) / 400.0f; 
-        //healthBar.flipX = true;
-        obj.SendMessageUpwards("FixedUpdate");
+        currentHp.x =  hp / 400.0f;
         healthBar.GetComponent<RectTransform>().localScale = currentHp;
-        //hp -= 1.0f;
+
     }
 
-    //public static explicit operator Monster(GameObject v)
-    //{
-    //    throw new NotImplementedException();
-    //}
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        
+        PhysicalObject obj = (PhysicalObject)collision.gameObject;
+        obj.Damage(dmg);
+        //healthBar.flipX = true;
+        //obj.SendMessageUpwards("FixedUpdate");
+        //hp -= 1.0f;
+    }
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        PhysicalObject obj = (PhysicalObject)collision.gameObject;
+        obj.Damage(dmg);
+    }
 
 
     // Update is called once per frame

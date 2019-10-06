@@ -5,15 +5,11 @@ using UnityEngine;
 using UnityEngine.UI;
 public class Player : PhysicalObject
 {
-    public float moveSpeed = 5f;
-    public float turnSpeed = 90f;
-    public float sp = 100.0f;
     //public float hp = 100.0f;
 
     public Rigidbody2D rb;
     public Image spBar;
     public Image hpBar;
-    public Camera cam;
 
 
     //public List<GameObject>
@@ -55,8 +51,9 @@ public class Player : PhysicalObject
     public int look_right = 1;
 
 
-    void Start()
+    public override void Start()
     {
+        base.Start();
         //xprev = Input.mousePosition.x;
         //yprev = Input.mousePosition.y;
         //hp = 50.0f; // Physical Object
@@ -73,6 +70,11 @@ public class Player : PhysicalObject
 
         Vector2 movement = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
         rb.position += movement;
+
+        if (Input.GetButton("Fire1"))
+        {
+            print("shooto");
+        }
         
 
         //transform.Translate(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0);
@@ -113,8 +115,11 @@ public class Player : PhysicalObject
     {
         PhysicalObject obj = (PhysicalObject)collision.gameObject;
         obj.Damage(dmg);
-        //currentHp.x = obj.Damage(dmg) / 400.0f;
-        //print("Colliding");
+    }
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        PhysicalObject obj = (PhysicalObject)collision.gameObject;
+        obj.Damage(dmg);
     }
     // Update is called once per frame
     void Update()
