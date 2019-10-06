@@ -59,18 +59,16 @@ public class Player : PhysicalObject
         //Console.Write("update");
     }
 
+    public void Move(Vector2 movePos)
+    {  
+        rb.position += movePos;
+    }
 
     void FixedUpdate()
     {
         /* Start bars at 100% */
 
-        Vector2 movement = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-        rb.position += movement;
 
-        if (Input.GetButton("Fire1"))
-        {
-            print("shooto");
-        }
         
 
         //transform.Translate(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0);

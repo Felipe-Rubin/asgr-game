@@ -5,6 +5,7 @@ using UnityEngine;
 public class Projectile : PhysicalObject
 {
     // Start is called before the first frame update
+    
     public override void Start()
     {
         base.Start();
@@ -15,4 +16,12 @@ public class Projectile : PhysicalObject
     {
         
     }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        //PhysicalObject obj = (PhysicalObject)collision.gameObject;
+        //obj.Damage(dmg);
+        //Destroy(gameObject);
+    }
+
 }

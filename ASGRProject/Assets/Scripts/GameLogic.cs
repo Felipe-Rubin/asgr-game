@@ -16,6 +16,7 @@ public class GameLogic : MonoBehaviour
     /* Prefabs */
     public GameObject[] minionPrefab; // Monster Prefab
     public GameObject[] potionPrefab; // Potion Prefab
+    public GameObject[] skillPrefab; // Skills Prefab
     public float dropRate = 0.5f;
 
     /* Tile Maps */
@@ -73,12 +74,22 @@ public class GameLogic : MonoBehaviour
         spBar.fillAmount = player.sp / player.getMaxSP();
 
         stageText.text = "Remaining Enemies: " + remaining_minions;
+        Vector2 mv = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+        player.Move(mv);
+
+
+        if (Input.GetButton("Fire1"))
+        {
+            Instantiate(skillPrefab[0].GetComponent<Skill>().projectile,player.transform.position, Quaternion.identity);
+        }
+
     }
 
 
     // Update is called once per frame
     void Update()
     {
+
         remaining_minions = GameObject.FindGameObjectsWithTag("minion").Length;
     }
 }

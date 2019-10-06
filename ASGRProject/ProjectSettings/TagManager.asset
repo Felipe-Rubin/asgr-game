@@ -7,6 +7,7 @@ TagManager:
   - map1
   - minion
   - potion
+  - projectile
   layers:
   - Default
   - TransparentFX
