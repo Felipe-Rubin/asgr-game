@@ -48,15 +48,12 @@ public class Player : PhysicalObject
     }
     */
     private Vector2 direction;
-    private Vector2 movement;
+    //private Vector2 movement;
     private Vector2 mousePos;
     private bool lr = true;
-    void aim(float x, float y)
-    {
 
+    public int look_right = 1;
 
-
-    }
 
     void Start()
     {
@@ -66,31 +63,42 @@ public class Player : PhysicalObject
         //rb = GetComponent<Rigidbody2D>();
         //Console.Write("update");
     }
+
+
     void FixedUpdate()
     {
         /* Start bars at 100% */
         hpBar.fillAmount = hp / maxHP;
         spBar.fillAmount = sp / 100.0f;
 
-        Vector2 lookDir = mousePos - rb.position;
+        Vector2 movement = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+        rb.position += movement;
         
-        float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg;
 
-        //print("Angle: " + angle);
-        if (Mathf.Abs(angle) < 90.0f && !lr)
-        {
-            transform.Rotate(180, 0, 0);
-            lr = true;
-            //print("Looking Right");
-        }
-        else if (Mathf.Abs(angle) < 180.0f && Mathf.Abs(angle) > 90.0f && lr )
-        {
-            transform.Rotate(180, 0, 0);
-            lr = false;
-            //print("Looking Left");
-        }
-        rb.rotation = angle; // Rotates Camera
-        transform.Translate(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0);
+        //transform.Translate(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0);
+        //cam.transform.Translate(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0);
+            
+        //Vector2 lookDir = mousePos - rb.position;
+
+        //float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg;
+
+        ////print("Angle: " + angle);
+        //if (Mathf.Abs(angle) < 90.0f && !lr)
+        //{
+        //    //transform.Rotate(180, 0, 0);
+        //    lr = true;
+        //    //print("Looking Right");
+        //}
+        //else if (Mathf.Abs(angle) < 180.0f && Mathf.Abs(angle) > 90.0f && lr )
+        //{
+        //    //transform.Rotate(180, 0, 0);
+        //    lr = false;
+        //    //print("Looking Left");
+        //}
+
+
+
+        //rb.rotation = angle; // Rotates Camera
 
 
         //if (Input.GetKey("x"))
@@ -103,21 +111,14 @@ public class Player : PhysicalObject
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        PhysicalObject obj = (PhysicalObject)collision.gameObject;
+        obj.Damage(dmg);
+        //currentHp.x = obj.Damage(dmg) / 400.0f;
         //print("Colliding");
     }
     // Update is called once per frame
     void Update()
     {
-        //Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        //Debug.DrawRay(ray.origin, ray.direction * 100, Color.yellow);
-
-        //RaycastHit rayCastInfo;
-        //if (Physics.Raycast(ray, out rayCastInfo))
-        //    print(rayCastInfo.transform.gameObject.name
-        //    + " - " + rayCastInfo.point);
-
-        //Input.mousePosition.x
-        mousePos = Camera.current.ScreenToWorldPoint(Input.mousePosition);
     }
 }
 

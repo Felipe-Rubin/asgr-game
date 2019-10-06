@@ -10,12 +10,24 @@ public class GameLogic : MonoBehaviour
     public List<GameObject> enemies;
     //public Monster mvp;
     public int nmonsters; // How many
+    /* Prefabs */
     public GameObject mp; // Monster Prefab
-    public Tilemap map1;
-    // Start is called before the first frame update
+    
 
-    void Start()
-    {        
+    /* Tile Maps */
+    public Tilemap map1;
+
+    /* Game Cameras */
+    //public Camera minicam;
+    //public Camera maincam;
+
+    /* Player */
+    public Player player;
+    
+    /*Spawn initial monster enemies*/
+    private void spawn_monsters()
+    {
+        //(Pref)
         float x, y = 0.0f;
         for (int i = 0; i < nmonsters; i++)
         {
@@ -24,11 +36,19 @@ public class GameLogic : MonoBehaviour
             GameObject minion = Instantiate(mp, new Vector3(x, y, 0), Quaternion.identity);
             enemies.Add(minion);
         }
+
+    }
+
+
+    void Start()
+    {
+        spawn_monsters();
     }
     void FixedUpdate()
     {
         stageText.text = "Remaining Enemies: "+enemies.Count;
     }
+
 
     // Update is called once per frame
     void Update()

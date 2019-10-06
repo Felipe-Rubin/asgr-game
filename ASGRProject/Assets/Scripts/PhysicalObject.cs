@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public abstract class PhysicalObject: MonoBehaviour
 {
     public float maxHP = 100.0f;
     public float hp;/* Health Points */
-    
+    public float dmg = 1.0f;
+
     private bool destructible; /* is destructible or not */
 
     /*Enable or disable invincible */

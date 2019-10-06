@@ -2,17 +2,17 @@ fileFormatVersion: 2
 guid: bce8be3573bd94df6852bdad39b66279
 TextureImporter:
   fileIDToRecycleName:
-    21300000: enemies_0
-    21300002: enemies_1
+    21300000: monsterDino
+    21300002: monsterSnake
     21300004: enemies_2
     21300006: enemies_3
     21300008: enemies_4
-    21300010: enemies_5
-    21300012: enemies_6
+    21300010: monsterAnt
+    21300012: monsterAnt2
     21300014: enemies_7
-    21300016: enemies_8
-    21300018: enemies_9
-    21300020: enemies_10
+    21300016: monsterElf
+    21300018: monsterEye
+    21300020: monsterCube
     21300022: enemies_11
     21300024: enemies_12
     21300026: enemies_13
@@ -65,23 +65,23 @@ TextureImporter:
     21300120: enemies_60
     21300122: enemies_61
     21300124: enemies_62
-    21300126: enemies_63
-    21300128: enemies_64
+    21300126: monsterZombie
+    21300128: monsterEyebody
     21300130: enemies_65
     21300132: enemies_66
     21300134: enemies_67
     21300136: enemies_68
-    21300138: enemies_69
-    21300140: enemies_70
-    21300142: enemies_71
-    21300144: enemies_72
+    21300138: monsterCat
+    21300140: monsterSlime2
+    21300142: monsterSlime3
+    21300144: monsterSlime4
     21300146: enemies_73
     21300148: enemies_74
     21300150: enemies_75
     21300152: enemies_76
     21300154: enemies_77
-    21300156: enemies_78
-    21300158: enemies_79
+    21300156: monsterSlime
+    21300158: monsterCube2
     21300160: enemies_80
     21300162: enemies_81
     21300164: enemies_82
@@ -157,6 +157,7 @@ TextureImporter:
     21300304: enemies_152
     21300306: enemies_153
     21300308: enemies_154
+    21300310: enemies_0
   externalObjects: {}
   serializedVersion: 9
   mipmaps:
@@ -272,7 +273,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: enemies_0
+      name: monsterDino
       rect:
         serializedVersion: 2
         x: 22
@@ -292,7 +293,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: enemies_1
+      name: monsterSnake
       rect:
         serializedVersion: 2
         x: 83
@@ -372,7 +373,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: enemies_5
+      name: monsterAnt
       rect:
         serializedVersion: 2
         x: 414
@@ -392,7 +393,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: enemies_6
+      name: monsterAnt2
       rect:
         serializedVersion: 2
         x: 474
@@ -432,7 +433,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: enemies_8
+      name: monsterElf
       rect:
         serializedVersion: 2
         x: 597
@@ -452,7 +453,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: enemies_9
+      name: monsterEye
       rect:
         serializedVersion: 2
         x: 662
@@ -472,7 +473,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: enemies_10
+      name: monsterCube
       rect:
         serializedVersion: 2
         x: 742
@@ -1532,7 +1533,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: enemies_63
+      name: monsterZombie
       rect:
         serializedVersion: 2
         x: 507
@@ -1552,7 +1553,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: enemies_64
+      name: monsterEyebody
       rect:
         serializedVersion: 2
         x: 538
@@ -1652,7 +1653,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: enemies_69
+      name: monsterCat
       rect:
         serializedVersion: 2
         x: 379
@@ -1672,7 +1673,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: enemies_70
+      name: monsterSlime2
       rect:
         serializedVersion: 2
         x: 410
@@ -1692,7 +1693,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: enemies_71
+      name: monsterSlime3
       rect:
         serializedVersion: 2
         x: 446
@@ -1712,7 +1713,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: enemies_72
+      name: monsterSlime4
       rect:
         serializedVersion: 2
         x: 476
@@ -1832,11 +1833,11 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: enemies_78
+      name: monsterSlime
       rect:
         serializedVersion: 2
         x: 469
-        y: 475
+        y: 476
         width: 94
         height: 107
       alignment: 0
@@ -1852,10 +1853,10 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: enemies_79
+      name: monsterCube2
       rect:
         serializedVersion: 2
-        x: 568
+        x: 570
         y: 474
         width: 87
         height: 102
@@ -3367,6 +3368,26 @@ TextureImporter:
       tessellationDetail: 0
       bones: []
       spriteID: c38db520cf71a47d5bea2ddb23144848
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: enemies_0
+      rect:
+        serializedVersion: 2
+        x: 333
+        y: 712
+        width: 257
+        height: 121
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 51ce970f6cb364b1ea5578e537608156
       vertices: []
       indices: 
       edges: []
