@@ -44,7 +44,7 @@ public class Player : PhysicalObject
     private Vector2 direction;
     //private Vector2 movement;
     private Vector2 mousePos;
-    //private bool lr = true;
+    private bool lr = true;
 
     public int look_right = 1;
 
@@ -64,6 +64,17 @@ public class Player : PhysicalObject
         rb.position += movePos;
     }
 
+    public void flip_sprites(bool x,bool y)
+    {
+        SpriteRenderer[] sprites = GetComponentsInChildren<SpriteRenderer>();
+        for (int i = 0; i < sprites.Length; i++)
+        {
+            sprites[i].flipX = x;
+            sprites[i].flipY = y;
+        }
+
+    }
+
     void FixedUpdate()
     {
         /* Start bars at 100% */
@@ -71,25 +82,21 @@ public class Player : PhysicalObject
         //transform.Translate(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0);
         //cam.transform.Translate(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0);
 
+
         //Vector2 lookDir = mousePos - rb.position;
         //float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg;
-
-        ////print("Angle: " + angle);
+        //print("Looking At Angle,dir: " + angle+","+lookDir);
+        
         //if (Mathf.Abs(angle) < 90.0f && !lr)
         //{
-        //    //transform.Rotate(180, 0, 0);
         //    lr = true;
-        //    //print("Looking Right");
+        //    flip_sprites(!lr, false);
         //}
-        //else if (Mathf.Abs(angle) < 180.0f && Mathf.Abs(angle) > 90.0f && lr )
+        //else if (Mathf.Abs(angle) < 180.0f && Mathf.Abs(angle) > 90.0f && lr)
         //{
-        //    //transform.Rotate(180, 0, 0);
         //    lr = false;
-        //    //print("Looking Left");
+        //    flip_sprites(!lr, false);
         //}
-
-
-
         //rb.rotation = angle; // Rotates Camera
 
 
