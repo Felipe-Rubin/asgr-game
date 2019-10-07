@@ -34,16 +34,22 @@ public class Monster : PhysicalObject
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        PhysicalObject obj = (PhysicalObject)collision.gameObject;
-        obj.Damage(dmg);
+        if (collision.gameObject.tag == "Player")
+        {
+            PhysicalObject obj = (PhysicalObject)collision.gameObject;
+            obj.Damage(dmg);
+        }
         //healthBar.flipX = true;
         //obj.SendMessageUpwards("FixedUpdate");
         //hp -= 1.0f;
     }
     private void OnTriggerStay2D(Collider2D collision)
     {
-        PhysicalObject obj = (PhysicalObject)collision.gameObject;
-        obj.Damage(dmg);
+        if (collision.gameObject.tag == "Player")
+        {
+            PhysicalObject obj = (PhysicalObject)collision.gameObject;
+            obj.Damage(dmg);
+        }
     }
 
 

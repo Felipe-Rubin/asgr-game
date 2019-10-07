@@ -9,7 +9,7 @@ public class GameLogic : MonoBehaviour
 
     public Image spBar;
     public Image hpBar;
-
+    public Text fps;
     public Text stageText;
     //public Monster mvp;
     public int nmonsters; // How many
@@ -17,6 +17,7 @@ public class GameLogic : MonoBehaviour
     public GameObject[] minionPrefab; // Monster Prefab
     public GameObject[] potionPrefab; // Potion Prefab
     public GameObject[] skillPrefab; // Skills Prefab
+    private List<Skill> skill_list;
     public float dropRate = 0.5f;
 
     /* Tile Maps */
@@ -28,7 +29,6 @@ public class GameLogic : MonoBehaviour
 
     /* Player */
     public Player player;
-    private int remaining_minions;
     
     /*Spawn initial monster enemies*/
     private void spawn_monsters()
@@ -51,7 +51,6 @@ public class GameLogic : MonoBehaviour
 
     public void monster_killed(Monster m)
     {
-        print("Called");
         bool rng = Random.Range(0.0f, 1.0f) < dropRate ? true : false;
         Vector3 pos = m.transform.position;
         Destroy(m.gameObject, 0);
@@ -64,33 +63,90 @@ public class GameLogic : MonoBehaviour
         
     }
 
+    public void initialize_skills()
+    {
+        for(int i = 0; i < skillPrefab.Length; i++)
+        {
+            Skill sk = (Skill)Instantiate(skillPrefab[i], new Vector3(0,0, 0), Quaternion.identity);
+            sk.setCaster(player.gameObject);
+            skill_list.Add(sk);
+        }
+    }
+
+    /* FPS Calculation
+       From Unity Docs: Time.realtimeSinceStartup
+    */
+    public float updateInterval = 0.5F;
+    private double lastInterval;
+    private int frames = 0;
+    private float fps_value;
+
     void Start()
     {
+        skill_list = new List<Skill>();
+        initialize_skills();
         spawn_monsters();
+
+        // Related to fps
+        lastInterval = Time.realtimeSinceStartup;
+        frames = 0;
     }
+    
+
+    
     void FixedUpdate()
     {
         hpBar.fillAmount = player.hp / player.getMaxHP();
         spBar.fillAmount = player.sp / player.getMaxSP();
 
-        stageText.text = "Remaining Enemies: " + remaining_minions;
+        stageText.text = "Remaining Enemies: " + GameObject.FindGameObjectsWithTag("minion").Length;
+        fps.text = "FPS: " + fps_value;
         Vector2 mv = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
         player.Move(mv);
 
-
+        //print("MousePos: "+Input.mousePosition);
         if (Input.GetButton("Fire1"))
         {
-            Instantiate(skillPrefab[0].GetComponent<Skill>().projectile,player.transform.position, Quaternion.identity);
+
+            int selected_skill = 0;
+            skill_list[selected_skill].cast();
+
+            //Projectile pj = skillPrefab[selected_skill].GetComponent<Skill>().;
+            //Vector3 pjPos = player.transform.position;
+            //pjPos.x += 5;
+            //GameObject pj = Instantiate(, pjPos, Quaternion.identity);
+
+            //.setPlayerOwnership(true);
+            //print(pj.GetComponent<Projectile>().GetPlayerOwnership());
+
+            //pj.GetComponent<Rigidbody2D>().AddForce(player.transform.forward);
+            //Vector3 lookDir = Input.mousePosition - player.transform.position;
+            //float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg;
+            //print("Player"+player.transform.position+" MousePos: " + angle);
+            ////Instantiate(skillPrefab[0].GetComponent<Skill>().projectile,player.transform.position, Quaternion.identity);
+            //Instantiate(skillPrefab[0].GetComponent<Skill>().projectile, Input.mousePosition, Quaternion.identity);
         }
+
 
     }
 
+    private void fps_increment()
+    {
+        ++frames;
+        float timeNow = Time.realtimeSinceStartup;
+        if (timeNow > lastInterval + updateInterval)
+        {
+            fps_value = (float)(frames / (timeNow - lastInterval));
+            frames = 0;
+            lastInterval = timeNow;
+        }
 
+    }
     // Update is called once per frame
     void Update()
     {
-
-        remaining_minions = GameObject.FindGameObjectsWithTag("minion").Length;
+        fps_increment();
+        
     }
 }
 

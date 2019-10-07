@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Projectile : PhysicalObject
+public class Projectile : Magic
 {
     // Start is called before the first frame update
     
@@ -14,14 +14,7 @@ public class Projectile : PhysicalObject
     // Update is called once per frame
     void Update()
     {
-        
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        //PhysicalObject obj = (PhysicalObject)collision.gameObject;
-        //obj.Damage(dmg);
-        //Destroy(gameObject);
-    }
 
 }

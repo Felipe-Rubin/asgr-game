@@ -92,5 +92,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6981503d31bdb477599bd3c11c94736c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectile: {fileID: 6075041658272005278, guid: 164de629ea1314c9f9ee1ca9f55712a1,
-    type: 3}
+  effect: {fileID: 248279242133165350, guid: 164de629ea1314c9f9ee1ca9f55712a1, type: 3}
+  cooldown: 3
