@@ -25,7 +25,7 @@ public class Potion : PhysicalObject
         {
             obj.Heal(hpEffect);
             obj.Recharge(spEffect);
-            Destroy(gameObject,1);
+            Destroy(gameObject);
         }
     }
     

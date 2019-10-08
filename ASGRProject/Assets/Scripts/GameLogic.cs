@@ -11,6 +11,7 @@ public class GameLogic : MonoBehaviour
     public Image hpBar;
     public Text fps;
     public Text stageText;
+    public Text coordPos;
     //public Monster mvp;
     public int nmonsters; // How many
     /* Prefabs */
@@ -19,6 +20,8 @@ public class GameLogic : MonoBehaviour
     public GameObject[] skillPrefab; // Skills Prefab
     private List<Skill> skill_list;
     public float dropRate = 0.5f;
+
+    public GameObject skillPanel;
 
     /* Tile Maps */
     public Tilemap map1;
@@ -68,9 +71,23 @@ public class GameLogic : MonoBehaviour
     {
         for(int i = 0; i < skillPrefab.Length; i++)
         {
-            Skill sk = (Skill)Instantiate(skillPrefab[i], new Vector3(0,0, 0), Quaternion.identity);
-            sk.setCaster(player.gameObject);
-            skill_list.Add(sk);
+            //Skill sk = (Skill)Instantiate(skillPrefab[i], new Vector3(0,0, 0), Quaternion.identity);
+
+            //Ok but on Game Scene.
+            //Skill sk = (Skill)Instantiate(skillPrefab[i]);
+            //sk.setCaster(player.gameObject);
+            //skill_list.Add(sk);
+
+
+            // On UI:
+            GameObject sk = Instantiate(skillPrefab[i]);
+            sk.GetComponent<Skill>().setCaster(player.gameObject);
+            skill_list.Add(sk.GetComponent<Skill>());
+            sk.transform.SetParent(skillPanel.transform, false);
+            //To set the position and function
+            //sk.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, (i * -289.5f));// <-- This positioning does not position with screen the size
+
+
         }
     }
 
@@ -100,6 +117,12 @@ public class GameLogic : MonoBehaviour
         hpBar.fillAmount = player.hp / player.getMaxHP();
         spBar.fillAmount = player.sp / player.getMaxSP();
 
+        coordPos.text = "Coordinate: (" +
+           player.transform.position.x + "," +
+           player.transform.position.y + "," +
+           player.transform.position.z + ")";
+
+
         stageText.text = "Remaining Enemies: " + GameObject.FindGameObjectsWithTag("minion").Length;
         fps.text = "FPS: " + Mathf.RoundToInt(fps_value);
         
@@ -112,6 +135,8 @@ public class GameLogic : MonoBehaviour
             int selected_skill = 0;
             skill_list[selected_skill].cast();
         }
+
+        //Input.GetAxisRaw(Input.mousePosition.)
 
 
     }
