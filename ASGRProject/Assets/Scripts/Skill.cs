@@ -29,12 +29,13 @@ public class Skill : MonoBehaviour
         SpriteRenderer s = GetComponentInChildren<SpriteRenderer>();
         if (on_cooldown())
         {
-            
-            s.color = new Color(s.color.r, s.color.g, s.color.b, 0.5f);
+            if (s != null)
+                s.color = new Color(s.color.r, s.color.g, s.color.b, 0.5f);
         }
         else
         {
-            s.color = new Color(s.color.r, s.color.g, s.color.b, 1.0f);
+            if( s!= null)
+                s.color = new Color(s.color.r, s.color.g, s.color.b, 1.0f);
         }
     }
 

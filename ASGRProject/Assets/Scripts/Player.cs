@@ -17,30 +17,6 @@ public class Player : PhysicalObject
     // Start is called before the first frame update
 
 
-    /*
-    void Camera::computeforward()
-    {
-        *xPos+= vx * *speed;
-        *zPos+= vz * *speed;
-    }
-    void Camera::computebackwards()
-    {
-        *xPos+= vx * -*speed;
-        *zPos+= vz * -*speed;
-
-    }
-    void Camera::computeleft()
-    {
-        *xPos+= *speed * sin(vz);
-        *zPos+= *speed * -sin(vx);
-
-    }
-    void Camera::computeright()
-    {
-        *xPos-= *speed * sin(vz);
-        *zPos-= *speed * -sin(vx);
-    }
-    */
     private Vector2 direction;
     //private Vector2 movement;
     private Vector2 mousePos;
