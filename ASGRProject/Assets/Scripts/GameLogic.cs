@@ -225,7 +225,7 @@ public class GameLogic : MonoBehaviour
         hpBar.fillAmount = player.hp / player.getMaxHP();
         spBar.fillAmount = player.sp / player.getMaxSP();
 
-        coordPos.text = "Coordinate: (" +
+        coordPos.text = "World: (" +
            player.transform.position.x + "," +
            player.transform.position.y + "," +
            player.transform.position.z + ")";

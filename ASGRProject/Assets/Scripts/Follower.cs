@@ -10,7 +10,6 @@ public class Follower : MonoBehaviour
 
     void Start()
     {
-
     }
     
     private void FixedUpdate()
