@@ -7,32 +7,43 @@ public class Player : PhysicalObject
 {
     //public float hp = 100.0f;
 
-    public Rigidbody2D rb;
-
-
-    //public List<GameObject>
-
-    //public GameObject player;
-
+    //public Rigidbody2D rb;
+    //public List<string> skills = new List<string>();
+    private SkillSystem skillSystem;
     // Start is called before the first frame update
-
 
     private Vector2 direction;
     //private Vector2 movement;
     private Vector2 mousePos;
-    private bool lr = true;
 
     public int look_right = 1;
 
-
+    private Vector2 prevPos;
     public override void Start()
     {
         base.Start();
-        //xprev = Input.mousePosition.x;
-        //yprev = Input.mousePosition.y;
-        //hp = 50.0f; // Physical Object
-        //rb = GetComponent<Rigidbody2D>();
-        //Console.Write("update");
+        prevPos = rb.position;
+        skillSystem = FindObjectOfType<SkillSystem>();
+
+        foreach (string s in skills)
+        {
+            GameObject icon = skillSystem.GetSkillIcon(s);
+            FindObjectOfType<UIOverlay>().AddToSkillPanel(s, icon);
+        }
+
+        setDestructible(true);
+    }
+
+    public List<string> GetSkills()
+    {
+        return skills;
+    }
+
+    public void AddSkill(Skill s)
+    {
+        skills.Add(s.name);
+        GameObject icon = skillSystem.GetSkillIcon(s.name);
+        FindObjectOfType<UIOverlay>().AddToSkillPanel(s.name,icon);
     }
 
     public void Move(Vector2 movePos)
@@ -53,39 +64,18 @@ public class Player : PhysicalObject
 
     void FixedUpdate()
     {
-        /* Start bars at 100% */
-
-        //transform.Translate(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0);
-        //cam.transform.Translate(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0);
-
-
-        //Vector2 lookDir = mousePos - rb.position;
-        //float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg;
-        //print("Looking At Angle,dir: " + angle+","+lookDir);
-        
-        //if (Mathf.Abs(angle) < 90.0f && !lr)
-        //{
-        //    lr = true;
-        //    flip_sprites(!lr, false);
-        //}
-        //else if (Mathf.Abs(angle) < 180.0f && Mathf.Abs(angle) > 90.0f && lr)
-        //{
-        //    lr = false;
-        //    flip_sprites(!lr, false);
-        //}
-        //rb.rotation = angle; // Rotates Camera
-
-
-        //if (Input.GetKey("x"))
-        //{
-
-        //    hp -= 10.0f;
-        //}
     }
 
     public override float Damage(float value)
     {
        float after_dmg = base.Damage(value);
+        //
+        if(hp <= 0f)
+        {
+            FindObjectOfType<GameLogic>().OnPlayerDeath();
+            return 0f;
+        }
+        //
         if (isDestructible())
         {
             SpriteRenderer[] sprites = GetComponentsInChildren<SpriteRenderer>();

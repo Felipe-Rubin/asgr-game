@@ -3,51 +3,102 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Tilemaps;
+using UnityEngine.SceneManagement;
+using System;
 
 public class GameLogic : MonoBehaviour
 {
+    public UIOverlay uIOverlay;
     public Texture2D cursorTexture;
-    public Image spBar;
-    public Image hpBar;
-    public Text fps;
-    public Text stageText;
-    public Text coordPos;
+
     //public Monster mvp;
     public int nmonsters; // How many
+    
+    public GameObject mvpPrefab;
+    private bool mvpSpawned = false;
+
+    public AudioClip levelAudioClip;
+    public AudioClip mvpAudioClip;
+    public AudioSource levelAudioSource;
+
+
     /* Prefabs */
     public GameObject[] minionPrefab; // Monster Prefab
     public GameObject[] potionPrefab; // Potion Prefab
     public GameObject[] skillPrefab; // Skills Prefab
-    private List<Skill> skill_list;
     public float dropRate = 0.5f;
-
-    public GameObject skillPanel;
+    private SkillSystem skillSystem;
 
     /* Tile Maps */
-    public Tilemap map1;
+    //public Tilemap activeMap;
+    private GameMap activeMap;
+
+    public GameMap[] Maps;
 
     /* Game Cameras */
     //public Camera minicam;
 
     public Camera maincam;
-
     /* Player */
     public Player player;
+
+    //public int startLevel = 0;
+    
+    void Start()
+    {
+        // Add game map here
+        int rng = UnityEngine.Random.Range(0, Maps.Length);
+        activeMap = Instantiate(Maps[rng], new Vector3(0, 0, 0), Quaternion.identity);
+
+        minionPrefab = activeMap.minionPrefab;
+
+        Debug.Log("RNG GOT "+rng);
+        
+        //activeMap = FindObjectOfType<GameMap>();
+        skillSystem = FindObjectOfType<SkillSystem>();
+
+        spawn_monsters();
+        configure_cursor();
+
+        Vector3 cam_start_pos = maincam.transform.position;
+        cam_start_pos.x = player.transform.position.x;
+        cam_start_pos.y = player.transform.position.y;
+        maincam.transform.position = cam_start_pos;
+
+        levelAudioSource = GetComponent<AudioSource>();
+        levelAudioSource.clip = levelAudioClip;
+    }
+
+    private T FindObjectsOfTypeIncludingAssets<T>()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void OnPlayerDeath()
+    {
+        SceneManager.LoadScene("Lose");
+    }
+
+    public void OnBossDefeat()
+    {
+        SceneManager.LoadScene("Win");
+    }
     
     /*Spawn initial monster enemies*/
     private void spawn_monsters()
     {
         /* Create Minion Monsters */
-        float x, y = 0.0f;
+        int x, y;
         for (int i = 0; i < nmonsters; i++)
         {
-            int rng = Random.Range(0, minionPrefab.Length);
-            x = Random.Range(map1.cellBounds.xMin+0.0f, map1.cellBounds.xMax);
-            y = Random.Range(map1.cellBounds.yMin+0.0f, map1.cellBounds.yMax);
+            int rng = UnityEngine.Random.Range(0, minionPrefab.Length);
+            //x = Random.Range(activeMap.GetBounds().xMin+0.0f, activeMap.GetBounds().xMax);
+            //y = Random.Range(activeMap.GetBounds().yMin+0.0f, activeMap.GetBounds().yMax);
+            x = UnityEngine.Random.Range(activeMap.GetBounds().xMin+5, activeMap.GetBounds().xMax-5);
+            y = UnityEngine.Random.Range(activeMap.GetBounds().yMin+5, activeMap.GetBounds().yMax-5);
             GameObject minion = Instantiate(minionPrefab[rng], new Vector3(x, y, 0), Quaternion.identity);
             minion.tag = "minion";
         }
-
         /*Create Random Items*/
     }
     // Note: Random.Range returns int if args are int,if args are float
@@ -55,235 +106,145 @@ public class GameLogic : MonoBehaviour
 
     public void monster_killed(Monster m)
     {
-        bool rng = Random.Range(0.0f, 1.0f) < dropRate ? true : false;
+
+        bool rng = UnityEngine.Random.Range(0.0f, 1.0f) < dropRate ? true : false;
+        bool shouldSpawnMVP = false;
+
+        if((GameObject.FindGameObjectsWithTag("mvp").Length == 0) && (GameObject.FindGameObjectsWithTag("minion").Length + GameObject.FindGameObjectsWithTag("miniboss").Length) == 1){
+            shouldSpawnMVP = true;
+        }
+
         Vector3 pos = m.transform.position;
+        string mtag = m.gameObject.tag;
+
         Destroy(m.gameObject, 0);
+
         if (rng)
         {
-            int rng2 = Random.Range(0, potionPrefab.Length);
+            int rng2 = UnityEngine.Random.Range(0, potionPrefab.Length);
 
             Instantiate(potionPrefab[rng2], pos, Quaternion.identity);
         }
-        
-    }
 
-    public void initialize_skills()
-    {
-        for(int i = 0; i < skillPrefab.Length; i++)
+        if(shouldSpawnMVP)
         {
-            //Skill sk = (Skill)Instantiate(skillPrefab[i], new Vector3(0,0, 0), Quaternion.identity);
+            uIOverlay.StartBossAnimation();
+            levelAudioSource.clip = mvpAudioClip;
+            levelAudioSource.Play();
 
-            //Ok but on Game Scene.
-            //Skill sk = (Skill)Instantiate(skillPrefab[i]);
-            //sk.setCaster(player.gameObject);
-            //skill_list.Add(sk);
+        }
 
-
-            // On UI:
-            GameObject sk = Instantiate(skillPrefab[i]);
-            sk.GetComponent<Skill>().setCaster(player.gameObject);
-            skill_list.Add(sk.GetComponent<Skill>());
-            sk.transform.SetParent(skillPanel.transform, false);
-            //To set the position and function
-            //sk.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, (i * -289.5f));// <-- This positioning does not position with screen the size
-
-
+        if (mtag == "mvp")
+        {
+            OnBossDefeat();
         }
     }
 
+    public void spawn_mvp()
+    {
+        
+        float x = UnityEngine.Random.Range(activeMap.GetBounds().xMin+0.0f, activeMap.GetBounds().xMax);
+        float y = UnityEngine.Random.Range(activeMap.GetBounds().yMin+0.0f, activeMap.GetBounds().yMax);
+        Monster mvp = (Monster)Instantiate(mvpPrefab, new Vector3(x, y, 0), Quaternion.identity);
+
+        //mvp.upgradeSP(mvp.sp*1.5f);
+        //mvp.upgradeHP(mvp.hp*10f);
+        //mvp.atk += 5;
+        //mvp.def = 1;
+        mvp.ReplaceHealthBar(uIOverlay.mvpBar);
+        //mvp
+        mvp.tag = "mvp";
+    }
+
+
     public void configure_cursor()
     {
-        Cursor.visible = true;
-        //Cursor.SetCursor()
-        Cursor.lockState = CursorLockMode.Confined;
+        //Vector2 cursorHotspot = new Vector2 (cursorTexture.width / 2, cursorTexture.height / 2);
+
+        //Cursor.SetCursor(cursorTexture,cursorHotspot, CursorMode.Auto);
+        //Cursor.visible = true;
+        //Cursor.lockState = CursorLockMode.Confined;
 
     }
 
-    /* FPS Calculation
-       From Unity Docs: Time.realtimeSinceStartup
-    */
-    public float updateInterval = 0.5F;
-    private double lastInterval;
-    private int frames = 0;
-    private float fps_value;
-
-    void Start()
-    {
-        skill_list = new List<Skill>();
-        initialize_skills();
-        spawn_monsters();
-        configure_cursor();
-
-        // Related to fps
-        lastInterval = Time.realtimeSinceStartup;
-        frames = 0;
-
-        Vector3 aux = Input.mousePosition;
-        Vector3 realmp = maincam.ScreenToWorldPoint(new Vector3(aux.x, aux.y, maincam.nearClipPlane));
-        oldpos = realmp;
-    }
 
 
-
-    /*
-        WAYS TO ROTATE:
-        transform.eulerAngles = Vector3.forward * degrees;
-    // or
-    transform.rotation = Quaternion.Euler(Vector3.forward * degrees);
-    // or
-    transform.rotation = Quaternion.LookRotation(Vector3.forward, yAxisDirection);
-    // or
-    transform.LookAt(Vector3.forward, yAxisDirection);
-    // or
-    transform.right = xAxisDirection;
-    // or
-    transform.up = yAxisDirection;
-
-    */
-    public float currentV = 0.0f;
-    public Vector3 oldpos;
     void CameraMouse() {
 
         Vector3 mp = maincam.ScreenToWorldPoint(Input.mousePosition);
         //player.transform.forward * Vector3()
         Debug.DrawLine(player.transform.position, mp, Color.yellow);
 
-        player.transform.rotation = Quaternion.LookRotation(transform.right, player.transform.position-mp);
+        player.transform.rotation = Quaternion.LookRotation(transform.forward, player.transform.position-mp);
 
-        Debug.Log("Rotation: " + player.transform.rotation+" Player Forward:"+player.transform.right + " Player Right:" + player.transform.right);
-
-        // player.transform.rotation = Quaternion.LookRotation(Vector3.forward, mpw, DELTA TIME);
-
-        
-        //player.transform.Rotate()
-        //Debug.Log("MP[S:"+mp+ ",W:" + maincam.ScreenToWorldPoint(mp) + ",R:" +maincam.ViewportPointToRay(mp)+"]   P[p:"+player.transform.position+",r:" + player.transform.rotation + ",u:" + player.transform.up+",f:"+ player.transform.forward+",e:"+ player.transform.eulerAngles+",S:"+maincam.WorldToScreenPoint(player.transform.position) +"]");
-
-        //player.transform.rotation = new Quaternion()
-        //float angle = 3.0f;
-
-        //Quaternion.FromToRotation
-
-        //float angle = Vector3.Angle(player.transform.eulerAngles)
-        //float angle = Vector3.Angle(player.transform.position, maincam.ScreenToWorldPoint(mp));
-
-        //print("Angle: " + angle);
-        //Vector3.rad
-
-        //player.transform.rotation = Quaternion.AngleAxis(angle, new Vector3(0, 0, 1));
-        //player.transform.rotation = Quaternion.AngleAxis(angle, player.transform.eulerAngles);
-
-        //Screenspace is defined in pixels.
-        //The bottom-left of the screen is (0,0);
-        //the right-top is (pixelWidth,pixelHeight).
-        //The z position is in world units from the camera
-
-        //Vector3 mp = Input.mousePosition;
-
-        //Vector3 realmp = maincam.ScreenToWorldPoint(new Vector3(mp.x, mp.y, maincam.nearClipPlane));
-        //Ray castPoint = Camera.main.ScreenPointToRay(realmp);
-        //print("Screen2World: " + realmp + " Screen2Ray: " + castPoint);
-
-
-        //Vector3 cp = maincam.WorldToScreenPoint(player.transform.position);
-        //Vector3 mp = Input.mousePosition - cp;
-        //float angleoff = (Mathf.Atan2(player.transform.right.y,player.transform.right.x) - Mathf.Atan2(mp.y, mp.x)) * Mathf.Rad2Deg;
-        //print("Angle Offset is:" + angleoff);        
-
-        //player.transform.Rotate(new Vector3(0,0,currentAngle-angleoff)*0.1f);
-
-        //currentAngle = angleoff;
-
-
-
-        //player.transform.position
-
-
-        //Vector3 aux = Input.mousePosition;
-        //Vector3 realmp = maincam.ScreenToWorldPoint(new Vector3(aux.x, aux.y, maincam.nearClipPlane));
-
-        ////print("Aux: "+ aux);
-        //Vector2 mp = new Vector2(realmp.x, realmp.y);
-
-        //print(mp+ " > " + oldpos);
-        //float angle = VMath.Instance.Angle(oldpos, mp);
-        //oldpos = mp;
-
-        //player.transform.eulerAngles = Vector3.forward * angle;
-        //player.transform.eulerAngles = Vector3.forward * -Vector3.Angle(oldpos, realmp);
-        //player.transform.LookAt(new Vector3(00, realmp.x));
-        //float speed = 5f;
-        //Vector2 direction = Camera.main.ScreenToWorldPoint(Input.mousePosition) - player.transform.position;
-        //float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        //print("Such Angle: " + angle);
-        //Quaternion rotation = Quaternion.AngleAxis(angle, Vector3.forward);
-        //player.transform.rotation = Quaternion.Slerp (transform.rotation, rotation, speed * Time.deltaTime);
     }
 
     //public Vector3 lt = new Vector3(0.0f, 0.0f, 0.0f);
     void FixedUpdate()
     {
-        hpBar.fillAmount = player.hp / player.getMaxHP();
-        spBar.fillAmount = player.sp / player.getMaxSP();
-
-        coordPos.text = "World: (" +
-           player.transform.position.x + "," +
-           player.transform.position.y + "," +
-           player.transform.position.z + ")";
-
-
-        stageText.text = "Remaining Enemies: " + GameObject.FindGameObjectsWithTag("minion").Length;
-        fps.text = "FPS: " + Mathf.RoundToInt(fps_value);
-        
-        Vector2 mv = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-        player.Move(mv);
-
-
-        CameraMouse();
-        //print("Mouse Position at:"+Input.mousePosition);
-        //Vector3 ltnow = Input.mousePosition;
-
-        //player.GetComponent<Rigidbody2D>().MoveRotation(Vector3.Angle(lt, ltnow));
-
-        //print("Mouse Angle: " + Vector3.Angle(lt, ltnow));
-        //lt = ltnow;
-        //print("Mouse Position" + Input.mousePosition.normalized);
-
-
-        //print("MousePos: "+Input.mousePosition);
-        if (Input.GetButton("Fire1"))
+        /* Scene Administration */
+        if(SceneManager.GetActiveScene().name == "Lose")
         {
-            int selected_skill = 0;
-            skill_list[selected_skill].cast();
-
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                SceneManager.LoadScene("Level1");
+            }
+        }else if(SceneManager.GetActiveScene().name == "Win")
+        {
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                SceneManager.LoadScene("Level1");
+            }
             
-            // Testing 
-            //player.gameObject.GetComponent<Rigidbody2D>().AddForce(mv*3.0f);
-
-
         }
-
-        //Input.GetAxisRaw(Input.mousePosition.)
-
-
-    }
-
-    private void fps_increment()
-    {
-        ++frames;
-        float timeNow = Time.realtimeSinceStartup;
-        if (timeNow > lastInterval + updateInterval)
+        else /* On Level 1*/
         {
-            fps_value = (float)(frames / (timeNow - lastInterval));
-            frames = 0;
-            lastInterval = timeNow;
+            Vector2 mv = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+            player.Move(mv);
+            Vector3 from = player.transform.position;
+            Vector3 to = maincam.ScreenToWorldPoint(Input.mousePosition);
+
+
+            CameraMouse();
+
+            if(Input.anyKey)
+            {
+                string inputStr = Input.inputString;
+                if(inputStr.Length > 0)
+                {
+                    char input = inputStr.ToCharArray()[0];
+                    if(input >= '0' && input <= '9')
+                    {
+                        if(input == '0')
+                        {
+                            player.SetSelectedSkill(10);
+                            
+                        }
+                        else
+                        {
+                            player.SetSelectedSkill((int)char.GetNumericValue(input)-1);
+                        }
+                        player.Use(from, to);
+
+                    }
+                }
+            }
+
+            if(Input.GetMouseButtonDown(0))
+            {
+                //
+            }
+
         }
 
+
+
     }
+
     
     // Update is called once per frame
     void Update()
     {
-        fps_increment();
 
     }
 }

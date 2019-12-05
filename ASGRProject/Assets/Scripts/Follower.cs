@@ -14,8 +14,7 @@ public class Follower : MonoBehaviour
     
     private void FixedUpdate()
     {
-
-        transform.position = nextPos;
+        this.transform.position = nextPos;
 
 
     }
@@ -25,6 +24,6 @@ public class Follower : MonoBehaviour
     void Update()
     {
         nextPos = target.position;
-        nextPos.z = transform.position.z;
+        nextPos.z = this.transform.position.z;
     }
 }

@@ -1,4 +1,10 @@
 sceneSetups:
-- path: Assets/Scenes/Scene1.unity
+- path: Assets/Scenes/Level1.unity
   isLoaded: 1
   isActive: 1
+- path: Assets/Scenes/Lose.unity
+  isLoaded: 0
+  isActive: 0
+- path: Assets/Scenes/Win.unity
+  isLoaded: 0
+  isActive: 0

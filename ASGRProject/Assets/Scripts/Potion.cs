@@ -19,7 +19,6 @@ public class Potion : PhysicalObject
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        print("Collision");
         PhysicalObject obj = (PhysicalObject)collision.gameObject;
         if (collision.gameObject.tag == "Player")
         {

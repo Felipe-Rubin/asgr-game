@@ -8,6 +8,14 @@ TagManager:
   - minion
   - potion
   - projectile
+  - skill
+  - map
+  - MagicSystem
+  - SkillSystem
+  - MileeSystem
+  - FxTemporaire
+  - miniboss
+  - mvp
   layers:
   - Default
   - TransparentFX
@@ -42,9 +50,12 @@ TagManager:
   - 
   - 
   m_SortingLayers:
-  - name: Creatures
-    uniqueID: 4080443519
+  - name: Map
+    uniqueID: 1091523279
     locked: 0
   - name: Default
     uniqueID: 0
-    locked: 1
+    locked: 0
+  - name: Creatures
+    uniqueID: 4080443519
+    locked: 0
